@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* This ensures our "Elegant" feel starts with a good foundation */
+body {
+	@apply bg-slate-50 text-slate-900 antialiased;
+	font-family: 'Inter', system-ui, sans-serif;
+}
