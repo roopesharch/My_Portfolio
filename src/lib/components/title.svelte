@@ -15,7 +15,6 @@
 		chars.forEach((char, i) => {
 			const span = document.createElement('span');
 			span.innerText = char === ' ' ? '\u00A0' : char;
-			// The "glitch-phase" class will look different in Dark vs Light via CSS
 			span.className = "inline-block opacity-0 transition-all duration-300 mx-[0.02em] glitch-phase";
 			titleElement.appendChild(span);
 
@@ -85,6 +84,10 @@
 </div>
 
 <style>
+	/* Importing the specific fonts from your file */
+	@import url('https://fonts.cdnfonts.com/css/potra');
+	@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@800;900&display=swap');
+
 	/* --- BASE STYLE --- */
 	.title-font {
 		font-weight: 900;
@@ -95,7 +98,7 @@
 		line-height: 1.4;
 		min-height: 1.5em;
 		
-		/* LIGHT MODE FONT & SPACING */
+		/* Applied POTRA font here */
 		font-family: 'Potra', sans-serif;
 		font-size: clamp(1.5rem, 6vw, 4.5rem);
 		letter-spacing: 0.5rem;
@@ -103,23 +106,23 @@
 
 	/* --- DARK MODE DESIGN OVERRIDE --- */
 	:global(.dark) .title-font {
-		/* You can change the font family here for Dark Mode later */
 		font-family: 'Potra', sans-serif; 
-		letter-spacing: 0.8rem; /* More "spacey" feel for dark mode */
+		letter-spacing: 0.8rem; 
 	}
 
 	/* --- GLITCH ARTIFACTS --- */
 	:global(.glitch-phase) {
-		color: #000000; /* Black artifacts in Light mode */
+		color: #000000;
 		filter: brightness(0.2) contrast(2);
+		font-family: 'Exo 2', sans-serif; /* Glitch chars look better in Exo 2 */
 	}
 
 	:global(.dark .glitch-phase) {
-		color: #ffffff; /* White/Silver artifacts in Dark mode */
+		color: #ffffff;
 		filter: brightness(0.8) contrast(1.5);
 	}
 
-	/* --- FINAL GOLD REVEAL (Shared by both) --- */
+	/* --- FINAL GOLD REVEAL --- */
 	:global(.active-shimmer), .shimmer-text {
 		background: linear-gradient(to bottom, #8A6624, #BF953F, #FCF6BA, #D4AF37, #AA771C);
 		background-size: 200% auto;
