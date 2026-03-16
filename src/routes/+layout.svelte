@@ -74,8 +74,8 @@
 
 			<nav class="fixed top-0 w-full z-40 flex justify-end items-center px-10 py-8 pointer-events-none">
 				<div class="flex items-center gap-4 pointer-events-auto">
-					<span class="text-[10px] font-black tracking-[0.3em] uppercase transition-all duration-500 text-[#D4AF37]">
-						{isDark ? 'NEBULA DARK' : 'MATRIX LIGHT'}
+					<span class="text-[15px] font-black tracking-[0.3em] uppercase transition-all duration-500 text-[#D4AF37]">
+						{isDark ? 'Dark Mode' : 'Lite Mode'}
 					</span>
 					
 					<button 

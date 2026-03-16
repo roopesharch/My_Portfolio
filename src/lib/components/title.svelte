@@ -2,16 +2,17 @@
 	import { onMount, tick } from 'svelte';
 
 	let { secondText = "DRIVE INTO PORTFOLIO", firstText = "W E L C O M E" } = $props();
-	
 	let titleElement = $state(null);
 	let showArrow = $state(false);
 	const glitchChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/%=<>!&|^~?.";
+
+	let isFirstVisit = true; // default
 
 	function renderText(text, isFirstRun) {
 		if (!titleElement) return;
 		titleElement.innerHTML = '';
 		const chars = [...text];
-		
+
 		chars.forEach((char, i) => {
 			const span = document.createElement('span');
 			span.innerText = char === ' ' ? '\u00A0' : char;
@@ -23,17 +24,16 @@
 				const flicker = setInterval(() => {
 					span.innerText = glitchChars[Math.floor(Math.random() * glitchChars.length)];
 					span.style.opacity = "1";
-					
+
 					if (count >= 10 + i) {
 						clearInterval(flicker);
 						span.innerText = char;
 						span.classList.remove('glitch-phase');
 						span.classList.add('active-shimmer');
-						
+
 						if (i === chars.length - 1 && isFirstRun) {
 							setTimeout(eraseAndSwap, 1200);
-						} 
-						else if (i === chars.length - 1 && !isFirstRun) {
+						} else if (i === chars.length - 1 && !isFirstRun) {
 							setTimeout(() => { showArrow = true; }, 600);
 						}
 					}
@@ -48,7 +48,7 @@
 	function eraseAndSwap() {
 		if (!titleElement) return;
 		const spans = titleElement.querySelectorAll('span');
-		
+
 		spans.forEach((span, i) => {
 			setTimeout(() => {
 				span.style.transition = "all 0.4s ease";
@@ -65,8 +65,16 @@
 
 	onMount(async () => {
 		await tick();
-		if (titleElement) {
-			renderText(firstText, true);
+		if (typeof window !== 'undefined') {
+			// Check session storage to see if user has visited before
+			isFirstVisit = !sessionStorage.getItem('homeVisited');
+
+			if (isFirstVisit) {
+				sessionStorage.setItem('homeVisited', 'true');
+				renderText(firstText, true); // show WELCOME animation
+			} else {
+				renderText(secondText, false); // directly show DRIVE INTO PORTFOLIO
+			}
 		}
 	});
 </script>
