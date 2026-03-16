@@ -1,12 +1,14 @@
 <script>
-    // CRITICAL: Ensure this is lowercase to match your folder tree
     import Projects from '$lib/components/projects.svelte';
     import { browser } from '$app/environment';
+
+    // Receive reactive states from layout slot
+    let { isDark, menuOpen } = $props();
 </script>
 
 <div class="projects-page-container">
     {#if browser}
-        <Projects />
+        <Projects {isDark} {menuOpen} />
     {/if}
 </div>
 

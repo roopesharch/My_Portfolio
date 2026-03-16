@@ -1,0 +1,40 @@
+// src/lib/stores/portfolio.js
+import { writable } from 'svelte/store';
+
+// Global portfolio store
+export const portfolioData = writable(null);
+
+const DB_CONFIG = {
+    URL: 'https://irkywlnfizmlzkltbepk.supabase.co',
+    KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlya3l3bG5maXptbHprbHRiZXBrIiwicm9sIjoib25lIiwiaWF0IjoxNzcyNDYzNTgyLCJleHAiOjIwODgwMzk1ODJ9.10xYnVeD4SEdvpoCs9-ZU1cJRv8iCGLt5ELgbSWoFXE'
+};
+
+// Fetch function
+export async function fetchPortfolioData() {
+    try {
+        const res = await fetch(`${DB_CONFIG.URL}/rest/v1/portfolio_metadata?category=eq.master_data&select=content`, {
+            method: 'GET',
+            headers: {
+                'apikey': DB_CONFIG.KEY,
+                'Authorization': `Bearer ${DB_CONFIG.KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!res.ok) throw new Error('Network response not ok');
+
+        const data = await res.json();
+        if (data && data.length > 0) {
+            const masterJson = data[0].content;
+            localStorage.setItem('portfolio_master_data', JSON.stringify(masterJson));
+            portfolioData.set(masterJson);
+        }
+    } catch (err) {
+        console.error('Fetch failed:', err);
+        const cached = JSON.parse(localStorage.getItem('portfolio_master_data'));
+        portfolioData.set(cached);
+    }
+}
+
+// Auto-fetch
+fetchPortfolioData();
