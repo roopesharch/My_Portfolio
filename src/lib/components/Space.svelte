@@ -10,8 +10,8 @@
 	const letters = (katakana + "0123456789").split("");
 	
 	const swarmSettings = {
-		count: 120,
-		baseSize: 19,
+		count: 190,
+		baseSize: 12,
 		speedLimit: 2.0,
 	};
 
@@ -26,12 +26,14 @@
 			offCanvas.height = size * 2;
 			const oCtx = offCanvas.getContext('2d');
 
-			oCtx.shadowColor = '#A45EDC';
-			oCtx.shadowBlur = 10;
-			
+
+			oCtx.shadowColor = '#C84BFF';   // neon purple glow
+			oCtx.shadowBlur = 25;           // stronger glow
+
 			const grad = oCtx.createLinearGradient(0, 0, size, size);
-			grad.addColorStop(0, '#E0C0FF');
-			grad.addColorStop(1, '#6B1EA0');
+			grad.addColorStop(0, '#F5D0FF'); // bright inner glow
+			grad.addColorStop(0.5, '#D946EF'); // neon mid
+			grad.addColorStop(1, '#7E22CE'); // deep purple edge
 
 			oCtx.fillStyle = grad;
 			oCtx.font = `900 ${size}px "Exo 2"`;
@@ -88,7 +90,11 @@
 	}
 
 	function animate() {
-		ctx.fillStyle = '#000000';
+		// ✅ Use your exact dark theme color
+		ctx.globalAlpha = 1;
+		ctx.globalCompositeOperation = 'source-over';
+		ctx.clearRect(0, 0, w, h);
+		ctx.fillStyle = '#0a0a0a'; // <-- updated here
 		ctx.fillRect(0, 0, w, h);
 
 		characters.forEach(char => {
@@ -134,6 +140,6 @@
 
 <style>
 	canvas {
-		background-color: #000000;
+		background-color: #0a0a0a; /* <-- updated here too */
 	}
 </style>

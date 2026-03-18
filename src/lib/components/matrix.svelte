@@ -28,6 +28,7 @@
             speeds = new Array(columns).fill(0).map(() => 0.4 + Math.random() * 0.8);
         }
 
+ 
         function draw() {
             // Trail effect
             ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
@@ -38,11 +39,21 @@
 
             for (let i = 0; i < drops.length; i++) {
                 const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillStyle = Math.random() > 0.98 ? "#FFFFFF" : rainGold[Math.floor(Math.random() * rainGold.length)];
-                
+
+                // Create radiant gold gradient for each character
+                const x = i * rainFontSize;
+                const y = drops[i] * rainFontSize;
+
+                const gradient = ctx.createRadialGradient(x, y, 1, x, y, rainFontSize);
+                gradient.addColorStop(0, "#FFF8D0"); // bright inner core
+                gradient.addColorStop(0.5, "#FFD700"); // main gold
+                gradient.addColorStop(1, "#AA771C"); // darker gold edge
+
+                ctx.fillStyle = Math.random() > 0.98 ? "#FFFFFF" : gradient;
+
                 const jitter = (Math.random() - 0.5) * 2;
-                ctx.fillText(text, i * rainFontSize + jitter, drops[i] * rainFontSize);
-                
+                ctx.fillText(text, x + jitter, y);
+
                 drops[i] -= speeds[i];
 
                 if (drops[i] * rainFontSize < -50) {

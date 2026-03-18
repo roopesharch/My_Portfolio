@@ -27,19 +27,33 @@
 
 			const katakana = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789";
 			const wallFontSize = 22;
-			const goldPrimary = "#D4AF37";
-			const goldHighlight = "#FCF6BA";
-			
+
 			let blanketY = 0;
 			let dissolveY = 0;
 			let phase = 'blanket'; 
 			let holdCounter = 0;
 			let handoffTriggered = false;
 
+			// Helper to draw glowing radium gold character
+			function drawChar(char, x, y) {
+				const isHighlight = Math.random() > 0.8;
+
+				ctx.fillStyle = isHighlight ? "#FFF8DC" : "#FFD700";
+				ctx.shadowBlur = isHighlight ? 18 : 12;
+				ctx.shadowColor = isHighlight ? "#FFFACD" : "#DAA520";
+				ctx.globalAlpha = isHighlight ? 1 : 0.9;
+
+				ctx.fillText(char, x, y);
+
+				ctx.shadowBlur = 0;
+				ctx.globalAlpha = 1;
+			}
+
 			function animate() {
-				ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-				ctx.fillRect(0, 0, canvas.width, canvas.height);
-				
+				// ✨ Removed background shine, fully transparent
+				// ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+				// ctx.fillRect(0, 0, canvas.width, canvas.height);
+
 				ctx.font = `900 ${wallFontSize}px "Exo 2"`;
 				ctx.textAlign = "center";
 				const wallCols = Math.floor(canvas.width / wallFontSize);
@@ -49,8 +63,7 @@
 						const x = i * wallFontSize + wallFontSize / 2;
 						for (let j = 0; j < Math.floor(blanketY); j++) {
 							const y = j * wallFontSize + wallFontSize;
-							ctx.fillStyle = Math.random() > 0.8 ? goldHighlight : goldPrimary;
-							ctx.fillText(katakana[Math.floor(Math.random() * katakana.length)], x, y);
+							drawChar(katakana[Math.floor(Math.random() * katakana.length)], x, y);
 						}
 					}
 					blanketY += 1.5; 
@@ -64,8 +77,7 @@
 						const x = i * wallFontSize + wallFontSize / 2;
 						for (let j = 0; j < Math.floor(canvas.height / wallFontSize) + 1; j++) {
 							const y = j * wallFontSize + wallFontSize;
-							ctx.fillStyle = Math.random() > 0.8 ? goldHighlight : goldPrimary;
-							ctx.fillText(katakana[Math.floor(Math.random() * katakana.length)], x, y);
+							drawChar(katakana[Math.floor(Math.random() * katakana.length)], x, y);
 						}
 					}
 					holdCounter++;
@@ -73,7 +85,6 @@
 				}
 				
 				if (phase === 'dissolve') {
-					// Hand off to Title.svelte immediately as dissolve starts
 					if (!handoffTriggered) {
 						onComplete();
 						handoffTriggered = true;
@@ -83,8 +94,7 @@
 						const x = i * wallFontSize + wallFontSize / 2;
 						for (let j = Math.floor(dissolveY); j < Math.floor(canvas.height / wallFontSize) + 1; j++) {
 							const y = j * wallFontSize + wallFontSize;
-							ctx.fillStyle = Math.random() > 0.8 ? goldHighlight : goldPrimary;
-							ctx.fillText(katakana[Math.floor(Math.random() * katakana.length)], x, y);
+							drawChar(katakana[Math.floor(Math.random() * katakana.length)], x, y);
 						}
 					}
 					dissolveY += 2.5; 
@@ -125,7 +135,7 @@
 	});
 </script>
 
-<div class="loader-wrapper fixed inset-0 z-[100] bg-white overflow-hidden flex items-center justify-center">
+<div class="loader-wrapper fixed inset-0 z-[100] bg-black overflow-hidden flex items-center justify-center">
 	<canvas bind:this={canvas} class="absolute inset-0 w-full h-full {showMatrixBlanket ? 'opacity-100' : 'opacity-0'}"></canvas>
 
 	<div class="loader-content relative z-10 flex flex-col items-center justify-center" style="transform: translateY(-2cm);">
@@ -136,12 +146,20 @@
 			<svg width="600" height="160" viewBox="0 20 200 60" fill="none" class="w-[90vw] max-w-[1000px] drop-shadow-gold">
 				<defs>
 					<linearGradient id="petraGoldFlow" x1="0%" y1="0%" x2="100%" y2="0%">
-						<stop offset="0%" stop-color="#DAA520" /><stop offset="35%" stop-color="#FFD700" />
-						<stop offset="50%" stop-color="#FFFFFF" /><stop offset="65%" stop-color="#FFD700" />
-						<stop offset="100%" stop-color="#DAA520" />
-						<animate attributeName="x1" from="-100%" to="100%" dur="3s" repeatCount="indefinite" />
-						<animate attributeName="x2" from="0%" to="200%" dur="3s" repeatCount="indefinite" />
+					  <stop offset="0%" stop-color="#FFD700" />         <!-- bright gold core -->
+					  <stop offset="10%" stop-color="#FFF8DC" />        <!-- glowing radium highlight -->
+					  <stop offset="20%" stop-color="#FFFFFF" />        <!-- peak glow / laser shine -->
+					  <stop offset="35%" stop-color="#FFFACD" />        <!-- strong glowing center -->
+					  <stop offset="50%" stop-color="#FFFFFF" />        <!-- second peak glow -->
+					  <stop offset="65%" stop-color="#FFFACD" />        <!-- strong glowing center -->
+					  <stop offset="80%" stop-color="#FFFFFF" />        <!-- peak glow / laser shine -->
+					  <stop offset="90%" stop-color="#FFF8DC" />        <!-- glowing radium highlight -->
+					  <stop offset="100%" stop-color="#FFD700" />       <!-- bright gold core -->
+					  <animate attributeName="x1" from="-100%" to="100%" dur="3s" repeatCount="indefinite" />
+					  <animate attributeName="x2" from="0%" to="200%" dur="3s" repeatCount="indefinite" />
 					</linearGradient>
+					
+
 				</defs>
 				<path d="M50 25C20 25 20 75 50 75C80 75 120 25 150 25C180 25 180 75 150 75C120 75 80 25 50 25Z" stroke="#F3F4F6" stroke-width="2.5" stroke-linecap="round" />
 				<path d="M50 25C20 25 20 75 50 75C80 75 120 25 150 25C180 25 180 75 150 75C120 75 80 25 50 25Z" stroke="url(#petraGoldFlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="path-animation" style="opacity: 0;" />

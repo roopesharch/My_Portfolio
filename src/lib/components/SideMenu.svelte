@@ -7,10 +7,10 @@
 		{ id: 'home', label: 'HOME', icon: 'fa-house-laptop', path: '/' },
 		{ id: 'about', label: 'ABOUT', icon: 'fa-user-tie', path: '/about' },
 		{ id: 'projects', label: 'PROJECTS', icon: 'fa-microchip', path: '/projects' },
-		{ id: 'skills', label: 'SKILLS', icon: 'fa-screwdriver-wrench', path: '/skills' },
 		{ id: 'experience', label: 'EXPERIENCE', icon: 'fa-code-branch', path: '/experience' },
-		{ id: 'certificates', label: 'CERTIFICATES', icon: 'fa-shield-halved', path: '/certificates' },
-		{ id: 'contact', label: 'CONTACT ME', icon: 'fa-satellite-dish', path: '/contact' }
+		{ id: 'Internships', label: 'INTERNSHIPS', icon: 'fa-satellite-dish', path: '/internships' },
+		{ id: 'skills', label: 'SKILLS', icon: 'fa-screwdriver-wrench', path: '/skills' },
+		{ id: 'certificates', label: 'CERTIFICATES', icon: 'fa-shield-halved', path: '/certificates' }
 	];
 
 	const socials = [
