@@ -163,6 +163,9 @@
 		z-index: 30;
 		animation: vibrateFlow 2s linear infinite;
 		margin-bottom: 20px;
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 8px;
 	}
 
 	.project-scroll-viewport {

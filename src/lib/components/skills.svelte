@@ -42,7 +42,7 @@
 
 	<div id="skillsContent" class:visible={isVisible}>
 		<header class="header-container">
-			<h2 class="skills-main-title">TECHNICAL_STACK</h2>
+			<h2 class="skills-main-title">SKILLS OVERVIEW</h2>
 		</header>
 
 		<div class="skills-grid-container">
@@ -120,6 +120,9 @@
 		-webkit-text-fill-color: transparent; letter-spacing: 4px; text-align: center;
 		margin: 0;
 		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 8px;
 	}
 
 	/* --- SNAKE SCROLLER PRESERVED --- */
