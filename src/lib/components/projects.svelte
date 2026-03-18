@@ -60,7 +60,7 @@
 	</div>
 
 	<div id="projectsContent" class:visible={isVisible}>
-		<h2 class="project-main-title">PROJECTS</h2>
+		<h2 class="project-main-title">SCROLL PROJECTS</h2>
 
 		<div 
 			bind:this={viewport} 
@@ -137,7 +137,7 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
-		padding-top: 8vh;
+		padding-top: 12vh;
 		opacity: 0;
 		/* Transition for moving the whole content block */
 		transition: opacity 1s ease, margin-left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -288,9 +288,9 @@
 		background-size: 600px auto; background-repeat: repeat;
 		animation: wallFlow 15s linear infinite, wallEntrance 2s ease-out forwards;
 	}
-	.wall-top { top: -750px; transform: rotateX(90deg) translateZ(549px); }
+	.wall-top { top: -834px; transform: rotateX(90deg) translateZ(549px); }
 	.wall-bottom { 
-		bottom: -750px; 
+		bottom: -930px; 
 		transform: rotateX(-90deg) translateZ(450px); 
 		animation-direction: reverse, normal;
 	}

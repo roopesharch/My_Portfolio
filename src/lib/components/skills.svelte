@@ -188,7 +188,7 @@
 	#travelOverlay { position: fixed; top: 0; right: 0; width: 100%; height: 100%; z-index: 5; perspective: 800px; overflow: hidden; }
 	.dive-container { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; }
 	.process-wall { position: absolute; width: 450%; height: 2000px; left: -175%; background-image: url('/img/travel-wall.png'); background-size: 600px auto; background-repeat: repeat; animation: wallFlow 20s linear infinite; }
-	.wall-top { top: -750px; transform: rotateX(90deg) translateZ(549px); }
-	.wall-bottom { bottom: -750px; transform: rotateX(-90deg) translateZ(450px); animation-direction: reverse; }
+	.wall-top { top: -835px; transform: rotateX(90deg) translateZ(549px); }
+	.wall-bottom { bottom: -920px; transform: rotateX(-90deg) translateZ(450px); animation-direction: reverse; }
 	@keyframes wallFlow { from { background-position: 0 0; } to { background-position: 0 1200px; } }
 </style>
