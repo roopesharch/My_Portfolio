@@ -1,237 +1,231 @@
 <script lang="ts">
-	import { theme } from '$lib/state/theme.svelte';
 	import { onMount } from 'svelte';
+	import { portfolioData, fetchPortfolioData } from '$lib/stores/portfolio';
+	import { theme } from '$lib/state/theme.svelte';
 
-	let videoElement: HTMLVideoElement;
-	let isPlaying = $state(false);
-	let isMuted = $state(true);
+	let isVisible = $state(false);
+	let isVideoOpen = $state(false);
+	let videoElement: HTMLVideoElement | null = $state(null);
 
-	// Narrative data curated from your 6+ years of experience 
-	const journey = [
-		{ 
-			year: '2020', 
-			event: 'Sun Technologies', 
-			detail: 'Built REST API automation and mastered compliance validation for mobile apps[cite: 49, 51, 52].' 
-		},
-		{ 
-			year: '2021', 
-			event: 'Infosys LTD', 
-			detail: 'Led test strategies for INDIGO and built CI/CD pipelines on Azure[cite: 45, 47, 48].' 
-		},
-		{ 
-			year: '2023', 
-			event: 'DecisionNxt', 
-			detail: 'Led QA teams to 100% regression coverage and optimized ETL run times[cite: 41, 44].' 
-		},
-		{ 
-			year: 'PRESENT', 
-			event: 'V2Soft PVT LTD', 
-			detail: 'Redesigning architectures for 70% growth and validating vehicle cloud data[cite: 15, 40].' 
-		}
-	];
+	onMount(async () => {
+		if (!$portfolioData) await fetchPortfolioData();
+		setTimeout(() => { isVisible = true; }, 100);
+	});
 
-	function togglePlay() {
-		if (videoElement.paused) {
-			videoElement.play();
-			isPlaying = true;
-		} else {
-			videoElement.pause();
-			isPlaying = false;
-		}
-	}
+	const about = $derived($portfolioData?.about);
+	const contact = $derived($portfolioData?.contact);
 
-	function toggleMute() {
-		isMuted = !isMuted;
-		videoElement.muted = isMuted;
+	function toggleVideo() {
+		isVideoOpen = !isVideoOpen;
+		if (!isVideoOpen && videoElement) videoElement.pause();
 	}
 </script>
 
-<div class="about-universe" class:dark={theme.isDark}>
-	<div class="kinetic-bg">
-		<span>SDET // DATA ENGINEER // FULL STACK // AI/ML TESTING</span>
-	</div>
+<svelte:head>
+	<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;800;900&display=swap" rel="stylesheet">
+	<style>
+		/* Global scroll restoration */
+		html, body {
+			overflow-y: auto !important;
+			height: auto !important;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</svelte:head>
 
-	<div class="scroll-wrapper">
-		<section class="hero-section">
-			<div class="video-frame">
-				<div class="video-glitch-overlay"></div>
+<div class="about-page-container" class:dark={theme.isDark}>
+	{#if about}
+		<div id="mainContent" class:visible={isVisible}>
+			
+			<header class="hero-section">
+				<span class="eyebrow">STRATEGIC QUALITY LEADERSHIP</span>
+				<h1 class="glaze-text">{about.name}</h1>
+				<div class="role-row">
+					{#each about.roles as role}
+						<span class="tag">{role}</span>
+					{/each}
+				</div>
+			</header>
+
+			<div class="bento-layout">
 				
-				<video 
-					bind:this={videoElement}
-					poster="/img/about-thumbnail.jpg" 
-					loop 
-					playsinline 
-					class="intro-video"
-				>
-					<source src="/videos/about.mp4" type="video/mp4" />
-				</video>
+				<section class="card bio-card">
+					<div class="card-header">
+						<i class="fa-solid fa-quote-left"></i>
+						<span>EXECUTIVE SUMMARY</span>
+					</div>
+					<p class="mission-statement">{about.objective}</p>
+					</section>
 
-				<div class="video-controls">
-					<button class="play-trigger" onclick={togglePlay} aria-label="Toggle Play">
-						{#if !isPlaying}
-							<div class="play-icon-large">
-								<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-								<span class="play-text">PLAY BITE</span>
-							</div>
-						{:else}
-							<div class="pause-indicator">
-								<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-							</div>
-						{/if}
-					</button>
-
-					<button class="mute-toggle" onclick={toggleMute}>
-						{isMuted ? 'UNMUTE' : 'MUTE'}
-					</button>
-				</div>
-
-				<div class="video-caption" class:fade-out={isPlaying}>
-					<h1 class="glitch-text" data-text="ROOPESH S">ROOPESH S</h1>
-					<p class="tagline">SDET // DATA ARCHITECT // AI QUALITY GUARDIAN</p>
-				</div>
-			</div>
-		</section>
-
-		<section class="persona-grid">
-			<div class="bio-card">
-				<h2 class="section-label">THE ARCHITECT</h2>
-				<p class="bio-text">
-					With over <strong>6 years of experience</strong>  in the forge of <strong>Test & Development</strong>, I don't just find bugs; 
-					I architect reliability. My journey spans from <strong>Data Engineering</strong>  
-					using PySpark and Databricks [cite: 29, 30] to validating the frontiers of <strong>LLM & RAG models</strong>[cite: 40].
-				</p>
-			</div>
-
-			<div class="stats-box">
-				<div class="stat-item">
-					<span class="stat-val">6+</span>
-					<span class="stat-lab">Years Exp </span>
-				</div>
-				<div class="stat-item">
-					<span class="stat-val">70%</span>
-					<span class="stat-lab">Perf Growth [cite: 40]</span>
-				</div>
-				<div class="stat-item">
-					<span class="stat-val">5</span>
-					<span class="stat-lab">Languages Spoken [cite: 92]</span>
-				</div>
-			</div>
-		</section>
-
-		<section class="journey-section">
-			<h2 class="main-page-title">CREATIVE JOURNEY</h2>
-			<div class="timeline-container">
-				{#each journey as item}
-					<div class="timeline-node">
-						<div class="node-year">{item.year}</div>
-						<div class="node-content">
-							<h3>{item.event}</h3>
-							<p>{item.detail}</p>
+				<section class="card video-card" onclick={toggleVideo}>
+					<div class="video-thumb">
+						<img src={about.thumbnail} alt="Intro Video" />
+						<div class="play-overlay">
+							<div class="play-ring"><i class="fa-solid fa-play"></i></div>
+							<span class="play-text">WATCH INTRO</span>
 						</div>
 					</div>
-				{/each}
-			</div>
-		</section>
+				</section>
 
-		<section class="interests-marquee">
-			<div class="marquee-track">
-				<span>POETRY [cite: 91] • CRICKET [cite: 85] • HIP-HOP [cite: 88] • HANDICRAFTS [cite: 90] • SWIMMING [cite: 87] • COUNSELLING [cite: 89]</span>
-				<span>POETRY [cite: 91] • CRICKET [cite: 85] • HIP-HOP [cite: 88] • HANDICRAFTS [cite: 90] • SWIMMING [cite: 87] • COUNSELLING [cite: 89]</span>
+				{#each about.sections as section}
+					<section class="card philosophy-card">
+						<div class="card-header">
+							<i class="fa-solid fa-microchip"></i>
+							<span>{section.label}</span>
+						</div>
+						<h3>{section.title}</h3>
+						<p>{section.content}</p>
+					</section>
+				{/each}
+
+				<section class="card stats-card">
+					{#each about.stats as stat}
+						<div class="stat-item">
+							<span class="number">{stat.val}</span>
+							<span class="label">{stat.label}</span>
+						</div>
+					{/each}
+				</section>
+
 			</div>
-		</section>
-        
-        <div class="bottom-spacer"></div>
-	</div>
+
+			<div class="footer-marquee">
+				<div class="marquee-inner">
+					{#each [...about.marquee, ...about.marquee] as text}
+						<span class="m-text">{text}</span>
+						<span class="m-sep">✦</span>
+					{/each}
+				</div>
+			</div>
+
+		</div>
+	{/if}
+
+	{#if isVideoOpen}
+		<div class="video-modal" onclick={toggleVideo}>
+			<div class="modal-box" onclick={e => e.stopPropagation()}>
+				<button class="close-btn" onclick={toggleVideo}><i class="fa-solid fa-xmark"></i></button>
+				<video bind:this={videoElement} src={about?.video_url} controls autoplay></video>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
-	.about-universe {
-		position: relative; width: 100%; min-height: 100vh;
-		background: #ffffff; color: #222; overflow-x: hidden;
-		transition: background 0.5s ease;
-	}
-	:global(.dark) .about-universe { background: #0a0a0a; color: #eee; }
+	.about-page-container {
+		--purple: #4B0082;
+		--gold: #D4AF37;
+		--bg: #ffffff;
+		--text: #333;
+		--card-bg: #f9f9f9;
+		--border: rgba(0, 0, 0, 0.05);
 
-	@media (min-width: 1024px) { .scroll-wrapper { margin-left: 260px; } }
-
-	.kinetic-bg {
-		position: fixed; top: 50%; left: 50%;
-		transform: translate(-50%, -50%) rotate(-15deg);
-		font-size: 15vw; font-weight: 900; opacity: 0.03;
-		white-space: nowrap; pointer-events: none; z-index: 0;
-	}
-
-	/* Hero Video Section */
-	.hero-section { height: 90vh; display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; z-index: 10; }
-	.video-frame {
-		position: relative; width: 100%; max-width: 1200px; height: 70vh;
-		border: 1px solid #BF953F; overflow: hidden; background: #000;
-		box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+		width: 100%;
+		min-height: 100vh;
+		background: var(--bg);
+		color: var(--text);
+		font-family: 'Exo 2', sans-serif;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		transition: background 0.3s ease;
 	}
 
-	.intro-video { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1); }
-	.video-glitch-overlay { position: absolute; inset: 0; background: linear-gradient(rgba(191, 149, 63, 0.05) 50%, transparent 50%); background-size: 100% 4px; z-index: 2; pointer-events: none; }
+	:global(.dark) .about-page-container {
+		--bg: #0a0a0a;
+		--text: #e0e0e0;
+		--card-bg: #111111;
+		--border: rgba(212, 175, 55, 0.1);
+	}
 
-	.video-controls { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; }
+	#mainContent {
+		flex: 1;
+		width: 100%;
+		padding: 60px 20px 100px 10px; 
+		box-sizing: border-box;
+		opacity: 0;
+		transform: translateY(20px);
+		transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+	}
+	#mainContent.visible { opacity: 1; transform: translateY(0); }
+
+	.hero-section { margin-bottom: 50px; }
+	.eyebrow { font-weight: 800; font-size: 0.75rem; color: var(--purple); letter-spacing: 4px; display: block; margin-bottom: 8px; }
+	:global(.dark) .eyebrow { color: var(--gold); }
 	
-	.play-trigger {
-		background: none; border: none; cursor: pointer; color: #BF953F;
-		transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-	}
-	.play-trigger:hover { transform: scale(1.1); }
-
-	.play-icon-large { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-	.play-icon-large svg { width: 100px; height: 100px; filter: drop-shadow(0 0 20px rgba(191, 149, 63, 0.8)); }
-	.play-text { font-family: 'Potra'; letter-spacing: 5px; font-size: 1.2rem; }
-
-	.pause-indicator { opacity: 0; transition: opacity 0.3s; color: #BF953F; }
-	.video-frame:hover .pause-indicator { opacity: 0.8; }
-	.pause-indicator svg { width: 60px; height: 60px; }
-
-	.mute-toggle {
-		position: absolute; top: 20px; right: 20px;
-		background: rgba(0,0,0,0.5); border: 1px solid #BF953F;
-		color: #BF953F; font-family: 'Potra'; padding: 5px 15px; font-size: 0.7rem; cursor: pointer;
+	.glaze-text { 
+		font-size: clamp(2.5rem, 8vw, 6.5rem); 
+		font-weight: 900; 
+		margin: 0; 
+		line-height: 1.1;
+		background: linear-gradient(90deg, var(--purple), var(--gold));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
 	}
 
-	.video-caption { position: absolute; bottom: 40px; left: 40px; z-index: 10; transition: opacity 0.5s; pointer-events: none; }
-	.video-caption.fade-out { opacity: 0.2; }
+	.role-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+	.tag { padding: 8px 18px; border: 1px solid var(--border); border-radius: 50px; font-size: 0.7rem; font-weight: 800; color: var(--purple); text-transform: uppercase; }
+	:global(.dark) .tag { color: var(--gold); }
 
-	.glitch-text { font-family: 'Potra'; font-size: clamp(2.5rem, 6vw, 5rem); color: #fff; margin: 0; text-shadow: 2px 2px #BF953F; }
-	.tagline { font-family: 'Exo 2'; color: #FCF6BA; letter-spacing: 4px; text-transform: uppercase; font-size: 0.85rem; }
+	.bento-layout {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: minmax(180px, auto);
+		gap: 25px;
+		width: 100%;
+	}
 
-	/* Persona Grid */
-	.persona-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; padding: 5rem 10%; position: relative; z-index: 10; }
-	.bio-text { font-family: 'Exo 2'; font-size: 1.3rem; line-height: 1.8; }
-	.section-label { font-family: 'Potra'; color: #BF953F; font-size: 0.8rem; letter-spacing: 5px; margin-bottom: 20px; }
-	.stats-box { display: flex; flex-direction: column; justify-content: center; gap: 30px; border-left: 1px solid rgba(191, 149, 63, 0.3); padding-left: 40px; }
-	.stat-val { display: block; font-family: 'Potra'; font-size: 3rem; background: linear-gradient(to bottom, #BF953F, #FCF6BA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-	.stat-lab { font-family: 'Exo 2'; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 2px; }
+	.card {
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 28px;
+		padding: 35px;
+		transition: 0.3s ease;
+	}
+	.card:hover { border-color: var(--gold); transform: translateY(-5px); }
 
-	/* Timeline Journey */
-	.journey-section { padding: 5rem 10%; background: rgba(191, 149, 63, 0.03); position: relative; z-index: 10; }
-	.main-page-title { font-family: 'Potra'; font-size: 2.5rem; letter-spacing: 10px; background: linear-gradient(to bottom, #BF953F, #FCF6BA, #AA771C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 4rem; }
-	.timeline-node { display: grid; grid-template-columns: 120px 1fr; padding: 35px 0; border-top: 1px solid rgba(191, 149, 63, 0.2); transition: background 0.3s; }
-	.timeline-node:hover { background: rgba(191, 149, 63, 0.05); }
-	.node-year { font-family: 'Potra'; font-size: 1.4rem; color: #BF953F; }
-	.node-content h3 { margin: 0 0 10px 0; font-family: 'Exo 2'; text-transform: uppercase; letter-spacing: 2px; font-size: 1.1rem; }
-	.node-content p { font-family: 'Exo 2'; color: #666; font-size: 0.95rem; line-height: 1.6; }
-	:global(.dark) .node-content p { color: #bbb; }
+	.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-weight: 900; font-size: 0.65rem; color: var(--purple); letter-spacing: 1px; }
+	:global(.dark) .card-header { color: var(--gold); }
 
-	/* Interests Marquee */
-	.interests-marquee { padding: 3rem 0; background: #BF953F; color: #000; transform: rotate(-1.5deg); width: 115%; margin-left: -7.5%; overflow: hidden; position: relative; z-index: 20; }
-	.marquee-track { display: flex; white-space: nowrap; animation: marquee 40s linear infinite; }
-	.marquee-track span { font-family: 'Potra'; font-size: 1.8rem; padding-right: 60px; font-weight: bold; }
+	.bio-card { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; justify-content: center; }
+	.mission-statement { font-size: clamp(1.1rem, 2.2vw, 1.8rem); line-height: 1.4; font-weight: 500; }
 
-	@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-	.bottom-spacer { height: 15vh; }
+	.video-card { padding: 0; cursor: pointer; overflow: hidden; position: relative; }
+	.video-thumb { width: 100%; height: 100%; }
+	.video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+	.play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+	.play-ring { width: 55px; height: 55px; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-	@media (max-width: 1023px) {
-		.persona-grid { grid-template-columns: 1fr; padding: 3rem 5%; }
-		.hero-section { height: auto; padding: 4rem 1rem; }
-		.video-frame { height: 45vh; }
-		.play-icon-large svg { width: 70px; height: 70px; }
-		.main-page-title { font-size: 1.8rem; }
-		.timeline-node { grid-template-columns: 1fr; gap: 10px; }
+	.philosophy-card h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 800; color: var(--purple); }
+	:global(.dark) .philosophy-card h3 { color: var(--gold); }
+	.philosophy-card p { font-size: 0.9rem; line-height: 1.6; opacity: 0.8; }
+
+	.stats-card { display: flex; flex-direction: column; justify-content: space-around; text-align: center; }
+	.number { display: block; font-size: 2.5rem; font-weight: 900; color: var(--purple); }
+	:global(.dark) .number { color: var(--gold); }
+	.label { font-size: 0.65rem; font-weight: 800; opacity: 0.6; text-transform: uppercase; }
+
+	.footer-marquee { margin-top: 100px; padding: 25px 0; border-top: 1px solid var(--border); overflow: hidden; width: 100%; }
+	.marquee-inner { display: flex; animation: scroll 50s linear infinite; white-space: nowrap; }
+	.m-text { font-size: 1.8rem; font-weight: 900; opacity: 0.1; margin: 0 40px; }
+	.m-sep { color: var(--gold); }
+
+	@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+	.video-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+	.modal-box { position: relative; width: 90%; max-width: 900px; }
+	.close-btn { position: absolute; top: -50px; right: 0; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
+	video { width: 100%; border-radius: 20px; }
+
+	@media (max-width: 1200px) {
+		.bento-layout { grid-template-columns: 1fr 1fr; }
+		.bio-card { grid-column: span 2; }
+	}
+
+	@media (max-width: 768px) {
+		#mainContent { padding: 80px 20px; }
+		.bento-layout { grid-template-columns: 1fr; }
+		.bio-card { grid-column: span 1; }
 	}
 </style>
